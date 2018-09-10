@@ -9,12 +9,12 @@
 <div id="content" class="content">
 	<!-- begin breadcrumb -->
 	<ol class="breadcrumb pull-right">
-		<li><a href="{{url('admin/user/create')}}" class="btn btn-success">Create New User</a></li>
+		<li><a href="{{url('admin/user/create')}}" class="btn btn-success">Create New Member</a></li>
 		
 	</ol>
 	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Users <small></small></h1>
+	<h1 class="page-header">Members <small></small></h1>
 	<div class="row">
 		<div class="col-md-12">
 			<table  class="table table-striped table-bordered data-table">
@@ -29,27 +29,16 @@
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($users as $user)
+					@foreach($members as $member)
 					<tr>
-						<td>{{$user->name}}</td>
-						<td>{{$user->email}}</td>
-						<td>
-							<span class="role-{{$user->id}}">
-								@if($user->role == 1)
-								Admin
-								@else
-								User
-								@endif
-							</span>
-						</td>
+						<td>{{$member->name}}</td>
+						<td>{{$member->email}}</td>
+						<td>{{ $member->roleName }}</td>
 						@admin
 						<td>
-								<div class="btn-group " id="status" data-toggle="buttons">
-								<label class="btn btn-default btn-on btn-xs {!! $user->role ? 'active' : '' !!} change-status-one" data-id="{{$user->id}}">
-									<input type="radio" value="1" name="multifeatured_module[module_id][status]"  class="check-box">Admin</label>
-									<label class="btn btn-default btn-off btn-xs {!! $user->role ? '' : 'active' !!} change-status-zero" data-id="{{$user->id}}">
-										<input type="radio" value="0" name="multifeatured_module[module_id][status]"  class="check-box">User</label>
-								</div>
+							@if($member->id != 1)
+		                    	<a class="btn btn-warning btn-xs" href="{{ route('user.edit',$member->id) }}"><i class="fa fa-edit"></i> Edit</a>
+		                    @endif
 						</td>
 						@endadmin
 					</tr>

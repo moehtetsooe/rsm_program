@@ -9,20 +9,20 @@
 	</ol>
 	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Members <small>Create Page</small></h1>
+	<h1 class="page-header">Members <small>Update Page</small></h1>
 	<div class="row">
 		<div class="col-md-12 well">
 			<br>
 			<div class="row">
 				<div class="col-md-8">
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/user') }}">
-						{{ csrf_field() }}
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/user/'.$member->id) }}">
+						{{ csrf_field() }}{{method_field('PUT')}}
 
 						<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 							<label for="name" class="col-md-4 control-label">Name</label>
 
 							<div class="col-md-8">
-								<input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" autofocus>
+								<input id="name" type="text" class="form-control" name="name" value="{{ $member->name }}" autofocus>
 
 								@if ($errors->has('name'))
 								<span class="help-block">
@@ -36,7 +36,7 @@
 							<label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
 							<div class="col-md-8">
-								<input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
+								<input id="email" type="email" class="form-control" name="email" value="{{ $member->email }}">
 
 								@if ($errors->has('email'))
 								<span class="help-block">
@@ -51,44 +51,20 @@
 							<div class="col-md-8">
 								<select name="role" id="role" class="form-control">
 									@foreach($roles as $role)
-										<option value="{{$role->id}}">{{$role->name}}</option>
+										@if($role->id == $member->role)
+										<option value="{{$role->id}}" selected="selected">{{$role->name}}</option>
+										@else
+											<option value="{{$role->id}}">{{$role->name}}</option>
+										@endif
 									@endforeach
 								</select>
-							</div>
-						</div>
-
-						<div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-							<label for="password" class="col-md-4 control-label">Password</label>
-
-							<div class="col-md-8">
-								<input id="password" type="password" class="form-control" name="password">
-
-								@if ($errors->has('password'))
-								<span class="help-block">
-									<strong>{{ $errors->first('password') }}</strong>
-								</span>
-								@endif
-							</div>
-						</div>
-
-						<div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-							<label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-
-							<div class="col-md-8">
-								<input id="password-confirm" type="password" class="form-control" name="password_confirmation">
-
-								@if ($errors->has('password_confirmation'))
-								<span class="help-block">
-									<strong>{{ $errors->first('password_confirmation') }}</strong>
-								</span>
-								@endif
 							</div>
 						</div>
 
 						<div class="form-group">
 						<div class="col-md-8 col-md-offset-4 text-right">
 								<button type="submit" class="btn btn-success">
-									Create
+									Upgate
 								</button>
 							</div>
 						</div>

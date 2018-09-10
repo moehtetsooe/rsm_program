@@ -27,7 +27,13 @@
   <link href="{{asset('css/gritter/jquery.gritter.css')}}" rel="stylesheet" />
   <link href="{{asset('css/dataTables.bootstrap.min.css')}}" rel="stylesheet" />
   <link href="{{asset('css/Responsive/css/responsive.bootstrap.min.css')}}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
   <!-- ================== END PAGE LEVEL STYLE ================== -->
+
+  <!-- ================== START MULTISELECT STYLE ================== -->
+  <link href="{{asset('rsm/css/multi-select.css')}}" rel="stylesheet" />
+  <!-- <link href="{{asset('rsm/css/mdb.css')}}" rel="stylesheet" /> -->
+  <!-- ================== MULTISELECT STYLE ================== -->
   
   <!-- ================== BEGIN BASE JS ================== -->
   <script src="{{asset('js/pace/pace.min.js')}}"></script>
@@ -47,7 +53,7 @@
       <div class="container-fluid">
         <!-- begin mobile sidebar expand / collapse button -->
         <div class="navbar-header">
-          <a href="{{asset('admin/home')}}" class="navbar-brand"><span class="navbar-logo"></span> Innov8te Admin</a>
+          <a href="{{asset('admin/home')}}" class="navbar-brand"><span class="navbar-logo"></span> R S M Admin</a>
           <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -58,75 +64,6 @@
         
         <!-- begin header navigation right -->
         <ul class="nav navbar-nav navbar-right">
-        
-        
-          <!-- <li>
-            <form class="navbar-form full-width">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Enter keyword" />
-                <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
-              </div>
-            </form>
-          </li> -->
-          <!-- <li class="dropdown">
-            <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
-              <i class="fa fa-bell-o"></i>
-              <span class="label">5</span>
-            </a>
-            <ul class="dropdown-menu media-list pull-right animated fadeInDown">
-                            <li class="dropdown-header">Notifications (5)</li>
-                            <li class="media">
-                                <a href="javascript:;">
-                                    <div class="media-left"><i class="fa fa-bug media-object bg-red"></i></div>
-                                    <div class="media-body">
-                                        <h6 class="media-heading">Server Error Reports</h6>
-                                        <div class="text-muted f-s-11">3 minutes ago</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="media">
-                                <a href="javascript:;">
-                                    <div class="media-left">Img</div>
-                                    <div class="media-body">
-                                        <h6 class="media-heading">John Smith</h6>
-                                        <p>Quisque pulvinar tellus sit amet sem scelerisque tincidunt.</p>
-                                        <div class="text-muted f-s-11">25 minutes ago</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="media">
-                                <a href="javascript:;">
-                                    <div class="media-left"><img src="{{asset('images/user.png')}}" class="media-object" alt="Img" /></div>
-                                    <div class="media-body">
-                                        <h6 class="media-heading">Olivia</h6>
-                                        <p>Quisque pulvinar tellus sit amet sem scelerisque tincidunt.</p>
-                                        <div class="text-muted f-s-11">35 minutes ago</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="media">
-                                <a href="javascript:;">
-                                    <div class="media-left"><i class="fa fa-plus media-object bg-green"></i></div>
-                                    <div class="media-body">
-                                        <h6 class="media-heading"> New User Registered</h6>
-                                        <div class="text-muted f-s-11">1 hour ago</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="media">
-                                <a href="javascript:;">
-                                    <div class="media-left"><i class="fa fa-envelope media-object bg-blue"></i></div>
-                                    <div class="media-body">
-                                        <h6 class="media-heading"> New Email From John</h6>
-                                        <div class="text-muted f-s-11">2 hour ago</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="dropdown-footer text-center">
-                                <a href="javascript:;">View more</a>
-                            </li>
-            </ul>
-          </li> -->
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
               <img src="{{asset('images/user.png')}}" alt="Img" /> 
@@ -134,12 +71,6 @@
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
-              <!-- <li><a href="javascript:;">Edit Profile</a></li>
-              <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li>
-              <li><a href="javascript:;">Calendar</a></li>
-              <li><a href="javascript:;">Setting</a></li>
-              <li class="divider"></li> -->
-              <!-- <li><a href="javascript:;">Log Out</a></li> -->
               <li>
                 <a href="{{ route('logout') }}"
                 onclick="event.preventDefault();
@@ -185,264 +116,52 @@
           </a>
           @admin
           <ul class="sub-menu">
-            <li class="active"><a href="{{asset('admin/user-lists')}}">Users</a></li>
-
+            <li class="active"><a href="{{asset('admin/user-lists')}}">Members</a></li>
+            <li class=""><a href="{{asset('admin/role')}}">Role</a></li>
           </ul>
           @endadmin
+          @php
+            $member_id = Auth::guard('admin')->user()->id;
+            $role = App\Role::where('roles.role','=',$member_id)->select('roles.role')->first();
+            echo $role;
+          @endphp
+          @if($role->role == '2' || $role->role == '1')
+          <li class="has-sub">
+            <a href="javascript:;">
+              <b class="caret pull-right"></b>
+              <i class="fa fa-user" aria-hidden="true"></i>
+              <span>Team Leader Job</span>
+            </a>
+            <ul class="sub-menu">
+              <li><a href="{{asset('admin/job-assign')}}">Job Assign Lists</a></li>
+            </ul>
+          </li>
+          @endif
+          @if($role->role == '3' || $role->role == '1')
+          <li class="has-sub">
+            <a href="javascript:;">
+              <b class="caret pull-right"></b>
+              <i class="fa fa-users" aria-hidden="true"></i>
+              <span>Operator</span>
+            </a>
+            <ul class="sub-menu">
+              <li><a href="{{asset('admin/operator')}}">Job Lists</a></li>
+            </ul>
+          </li>
+          @endif
+          @if($role->role == '4' || $role->role == '1')
+          <li class="has-sub">
+            <a href="javascript:;">
+              <b class="caret pull-right"></b>
+              <i class="fa fa-check-square-o" aria-hidden="true"></i>
+              <span>Checker</span>
+            </a>
+            <ul class="sub-menu">
+              <li><a href="{{asset('admin/checker')}}">Job Lists</a></li>
+            </ul>
+          </li>
         </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <span class="badge pull-right">10</span>
-            <i class="fa fa-inbox"></i> 
-            <span>Email</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Inbox v1</a></li>
-            <li><a href="#">Inbox v2</a></li>
-            <li><a href="#">Compose</a></li>
-            <li><a href="#">Detail</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-suitcase"></i>
-            <span>UI Elements <span class="label label-theme m-l-5">NEW</span></span> 
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">General</a></li>
-            <li><a href="#">Typography</a></li>
-            <li><a href="#">Tabs & Accordions</a></li>
-            <li><a href="#">Unlimited Nav Tabs</a></li>
-            <li><a href="#">Modal & Notification</a></li>
-            <li><a href="#">Widget Boxes</a></li>
-            <li><a href="#">Media Object</a></li>
-            <li><a href="#">Buttons</a></li>
-            <li><a href="#">Icons</a></li>
-            <li><a href="#">Simple Line Icons</a></li>
-            <li><a href="#">Ionicons</a></li>
-            <li><a href="#">Tree View</a></li>
-            <li><a href="#">Language Bar & Icon</a></li>
-            <li><a href="#">Social Buttons<i class="fa fa-paper-plane text-theme m-l-5"></i></a></li>
-            <li><a href="ui_tour.html">Intro JS<i class="fa fa-paper-plane text-theme m-l-5"></i></a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-file-o"></i>
-            <span>Form Stuff <span class="label label-theme m-l-5">NEW</span></span> 
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Form Elements</a></li>
-            <li><a href="#">Form Plugins <i class="fa fa-paper-plane text-theme m-l-5"></i></a></li>
-            <li><a href="#">Form Slider + Switcher</a></li>
-            <li><a href="#">Form Validation</a></li>
-            <li><a href="#">Wizards</a></li>
-            <li><a href="#">Wizards + Validation</a></li>
-            <li><a href="#">WYSIWYG</a></li>
-            <li><a href="#">X-Editable</a></li>
-            <li><a href="#">Multiple File Upload</a></li>
-            <li><a href="#">Summernote <i class="fa fa-paper-plane text-theme m-l-5"></i></a></li>
-            <li><a href="#">Dropzone <i class="fa fa-paper-plane text-theme m-l-5"></i></a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-th"></i>
-            <span>Tables</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Basic Tables</a></li>
-            <li class="has-sub">
-              <a href="#"><b class="caret pull-right"></b> Managed Tables</a>
-              <ul class="sub-menu">
-                <li><a href="#">Default</a></li>
-                <li><a href="#">Autofill</a></li>
-                <li><a href="#">Buttons</a></li>
-                <li><a href="#">ColReorder</a></li>
-                <li><a href="#">Fixed Column</a></li>
-                <li><a href="#">Fixed Header</a></li>
-                <li><a href="#">KeyTable</a></li>
-                <li><a href="#">Responsive</a></li>
-                <li><a href="#">RowReorder</a></li>
-                <li><a href="#">Scroller</a></li>
-                <li><a href="#">Select</a></li>
-                <li><a href="#">Extension Combination</a></li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-star"></i> 
-            <span>Front End</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#" target="_blank">One Page Parallax</a></li>
-            <li><a href="#" target="_blank">Blog</a></li>
-            <li><a href="#" target="_blank">Forum</a></li>
-            <li><a href="#" target="_blank">E-Commerce</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-envelope"></i>
-            <span>Email Template</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">System Template</a></li>
-            <li><a href="#">Newsletter Template</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-area-chart"></i>
-            <span>Chart</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Flot Chart</a></li>
-            <li><a href="#">Morris Chart</a></li>
-            <li><a href="#">Chart JS</a></li>
-            <li><a href="#">d3 Chart</a></li>
-          </ul>
-        </li>
-        <li><a href="calendar.html"><i class="fa fa-calendar"></i> <span>Calendar</span></a></li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-map-marker"></i>
-            <span>Map</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Vector Map</a></li>
-            <li><a href="#">Google Map</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-camera"></i>
-            <span>Gallery</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Gallery v1</a></li>
-            <li><a href="#">Gallery v2</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-cogs"></i>
-            <span>Page Options</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Blank Page</a></li>
-            <li><a href="#">Page with Footer</a></li>
-            <li><a href="#">Page without Sidebar</a></li>
-            <li><a href="#">Page with Right Sidebar</a></li>
-            <li><a href="#">Page with Minified Sidebar</a></li>
-            <li><a href="#">Page with Two Sidebar</a></li>
-            <li><a href="#">Page with Line Icons</a></li>
-            <li><a href="#">Page with Ionicons</a></li>
-            <li><a href="#">Full Height Content</a></li>
-            <li><a href="#">Page with Wide Sidebar</a></li>
-            <li><a href="#">Page with Light Sidebar</a></li>
-            <li><a href="#">Page with Mega Menu</a></li>
-            <li><a href="#">Page with Top Menu</a></li>
-            <li><a href="#">Page with Boxed Layout</a></li>
-            <li><a href="#">Page with Mixed Menu</a></li>
-            <li><a href="#">Boxed Layout with Mixed Menu</a></li>
-            <li><a href="#">Page with Transparent Sidebar</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-gift"></i>
-            <span>Extra</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Timeline</a></li>
-            <li><a href="#">Coming Soon Page</a></li>
-            <li><a href="#">Search Results</a></li>
-            <li><a href="#">Invoice</a></li>
-            <li><a href="#">404 Error Page</a></li>
-            <li><a href="#">Profile Page</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-key"></i>
-            <span>Login & Register</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="login.html">Login</a></li>
-            <li><a href="#">Login v2</a></li>
-            <li><a href="#">Login v3</a></li>
-            <li><a href="#">Register v3</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-cubes"></i>
-            <span>Version <span class="label label-theme m-l-5">NEW</span></span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="javascript:;">HTML</a></li>
-            <li><a href="#">AJAX</a></li>
-            <li><a href="#">ANGULAR JS</a></li>
-            <li><a href="#">ANGULAR JS 2 <i class="fa fa-paper-plane text-theme m-l-5"></i></a></li>
-            <li><a href="#">MATERIAL DESIGN</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-medkit"></i>
-            <span>Helper</span>
-          </a>
-          <ul class="sub-menu">
-            <li><a href="#">Predefined CSS Classes</a></li>
-          </ul>
-        </li>
-        <li class="has-sub">
-          <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-align-left"></i> 
-            <span>Menu Level</span>
-          </a>
-          <ul class="sub-menu">
-            <li class="has-sub">
-              <a href="javascript:;">
-                <b class="caret pull-right"></b>
-                Menu 1.1
-              </a>
-              <ul class="sub-menu">
-                <li class="has-sub">
-                  <a href="javascript:;">
-                    <b class="caret pull-right"></b>
-                    Menu 2.1
-                  </a>
-                  <ul class="sub-menu">
-                    <li><a href="javascript:;">Menu 3.1</a></li>
-                    <li><a href="javascript:;">Menu 3.2</a></li>
-                  </ul>
-                </li>
-                <li><a href="javascript:;">Menu 2.2</a></li>
-                <li><a href="javascript:;">Menu 2.3</a></li>
-              </ul>
-            </li>
-            <li><a href="javascript:;">Menu 1.2</a></li>
-            <li><a href="javascript:;">Menu 1.3</a></li>
-          </ul>
-        </li>
+        @endif
         <!-- begin sidebar minify button -->
         <li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
         <!-- end sidebar minify button -->
@@ -465,14 +184,6 @@
     <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn"><i class="fa fa-cog"></i></a>
     <div class="theme-panel-content">
       <h5 class="m-t-0">Color Theme</h5>
-                <!-- <ul class="theme-list clearfix">
-                    <li class="active"><a href="javascript:;" class="bg-green" data-theme="default" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Default">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-red" data-theme="red" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Red">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-blue" data-theme="blue" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Blue">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-purple" data-theme="purple" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Purple">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-orange" data-theme="orange" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Orange">&nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-black" data-theme="black" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Black">&nbsp;</a></li>
-                  </ul> -->
                   <div class="divider"></div>
                   <div class="row m-t-10">
                     <div class="col-md-5 control-label double-line">Header Styling</div>
@@ -543,12 +254,16 @@
             </div>
             <!-- end page container -->
 
-            <!-- ================== BEGIN BASE JS ================== -->
-            <script src="{{asset('js/jquery/jquery-1.9.1.min.js')}}"></script>
-            <script src="{{asset('js/jquery/jquery-migrate-1.1.0.min.js')}}"></script>
-            <script src="{{asset('js/minified/jquery-ui.min.js')}}"></script>
-            <script src="{{asset('js/bootstrap.min.js')}}"></script>
-  <!--[if lt IE 9]>
+    <!-- ================== BEGIN BASE JS ================== -->
+    <!-- <script src="{{asset('js/jquery/jquery-1.9.1.min.js')}}"></script> -->
+    <script src="{{asset('rsm/js/jquery.min.js')}}"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+    <script src="{{asset('js/jquery/jquery-migrate-1.1.0.min.js')}}"></script>
+    <script src="{{asset('js/minified/jquery-ui.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+    <!--[if lt IE 9]>
     <script src="assets/crossbrowserjs/html5shiv.js"></script>
     <script src="assets/crossbrowserjs/respond.min.js"></script>
     <script src="assets/crossbrowserjs/excanvas.min.js"></script>
@@ -566,7 +281,6 @@
     <script src="{{asset('js/sparkline/jquery.sparkline.js')}}"></script>
     <script src="{{asset('js/jquery-jvectormap/jquery-jvectormap.min.js')}}"></script>
     <script src="{{asset('js/jquery-jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
-    <!-- <script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script> -->
     <script src="{{asset('js/dashboard.min.js')}}"></script>
     <script src="{{asset('js/apps.min.js')}}"></script>
     <script src="{{asset('js/DataTables/media/js/jquery.dataTables.js')}}"></script>
@@ -574,6 +288,8 @@
     <script src="{{asset('js/DataTables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('js/table-manage-default.demo.min.js')}}"></script>
     <script src="{{asset('js/apps.min.js')}}"></script>
+    <script src="{{asset('rsm/js/jquery.multi-select.js')}}"></script>
+    <!-- <script src="{{asset('rsm/js/mdb.js')}}"></script> -->
     <!-- ================== END PAGE LEVEL JS ================== -->
     
     <script>
@@ -593,6 +309,16 @@
       ga('create', 'UA-53034621-1', 'auto');
       ga('send', 'pageview');
 
+    </script>
+    <script type="text/javascript">
+        $(function() {
+          $('#datetimepicker1').datetimepicker();
+        });
+    </script>
+    <script type="text/javascript">
+        $(function() {
+          $('#datetimepicker2').datetimepicker();
+        });
     </script>
     @yield('js')
   </body>

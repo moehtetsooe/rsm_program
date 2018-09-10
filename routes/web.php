@@ -30,6 +30,18 @@ Route::group(['prefix' => 'admin'], function () {
 
   Route::get('user-lists','adminController@index');
   Route::get('change/user-status','adminController@chaneUserStatus');
-  Route::get('user/create','adminController@create');
-  Route::post('user/create','adminController@store');
+  /*Route::get('user/create','adminController@create');
+  Route::post('user/create','adminController@store');*/
+
+  Route::resource('user', 'adminController');
+  Route::resource('role', 'RoleController');
+  Route::resource('job-assign', 'JobAssignController');
+
+
+  //************ Statrt Operator ************//
+  Route::get('operator', 'OperatorController@index');
+  Route::get('job-detail/{id}', 'OperatorController@detail');
+  Route::get('download', 'OperatorController@download');
+  //************ End Operator ************//
+
 });

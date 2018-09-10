@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Robertho and Sons</title>
+    <title>R S M</title>
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">

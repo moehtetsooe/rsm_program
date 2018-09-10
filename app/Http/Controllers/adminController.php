@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Admin;
+use App\Role;
 use Illuminate\Support\Facades\Blade;
 use App\Auth;
 
@@ -16,8 +17,12 @@ class adminController extends Controller
      */
     public function index()
     {
-        $users = Admin::all();
-        return view('admin.user.index',compact('users'));
+        $members = Admin::join('roles','roles.id','=','admins.role')
+        ->select('roles.name as roleName','admins.*')
+        ->orderBy('admins.id', 'asc')
+        ->get();
+        //dd($members);
+        return view('admin.user.index',compact('members'));
     }
 
     /**
@@ -27,7 +32,8 @@ class adminController extends Controller
      */
     public function create()
     {
-        return view('admin.user.create');
+        $roles = Role::Where('roles.id','!=',1)->get();
+        return view('admin.user.create', compact('roles'));
     }
 
     /**
@@ -41,6 +47,7 @@ class adminController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'role' => 'required|int|max:11',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
@@ -48,6 +55,7 @@ class adminController extends Controller
             Admin::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'role' => $request->role,
                 'password' => bcrypt($request->password),
             ]);
 
@@ -76,7 +84,10 @@ class adminController extends Controller
      */
     public function edit($id)
     {
-        //
+        //dd('here');
+        $member = Admin::where('admins.id','=',$id)->first();
+        $roles = Role::Where('roles.id','!=',1)->get(); 
+        return view('admin.user.edit', compact('member','roles'));
     }
 
     /**
@@ -88,7 +99,20 @@ class adminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //dd('here');
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'role' => 'required|int|max:11',
+        ]);
+
+        Admin::find($id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+        ]);
+
+        return redirect('admin/user')->with('success','Successfully Update!');
     }
 
     /**
